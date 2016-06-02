@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf8" />
+<title>Alchemiestick</title>
+<style>
+.backdrop {
+  background: #eeeeee; 
+  fill: #eeeeee;
+}
+.frame {
+  background-color: #309090 ;
+  fill: #309090;
+  z-index: -1;
+}
+
+.calign {
+   position: relative; 
+   margin-left: auto; 
+   margin-right: auto; 
+   width: 80%;
+}
+
+.menu {
+  position:relative; 
+  left:0px;
+  width: 100px;
+  margin-top: 0px; 
+  z-index:0;
+}
+
+.right {
+    position: absolute; 
+    right:0px;
+}
+.left {
+    position: absolute; 
+    left:0px;
+}
+
+a {
+  font-size: 10pt;
+  margin-left: 3px;
+}
+
+div {
+  margin: 0px;
+  padding: 0px;
+}
+</style>
+<script src="/js/ajax.js" type="text/javascript"></script>
+<script src="/js/ajax-dynamic-content.js" type="text/javascript"></script>
+
+<template id="ltcirc">
+ <svg height="24" width="24">
+  <rect height="25" width="25"/>
+  <circle cx="24" cy="24" r="24"/>
+ </svg>
+</template>
+<template id="rtcirc">
+ <svg height="24" width="24">
+  <rect height="25" width="25"/>
+  <circle cx="0" cy="24" r="24"/>
+ </svg>
+</template>
+<template id="lbcirc">
+ <svg height="24" width="24">
+  <rect height="25" width="25"/>
+  <circle cx="24" cy="0" r="24"/>
+ </svg>
+</template>
+<template id="rbcirc">
+ <svg height="24" width="24">
+  <rect height="25" width="25"/>
+  <circle cx="0" cy="0" r="24"/>
+ </svg>
+</template>
+<script>
+function defaults(i, def)
+{
+  if (i == undefined )
+    return def;
+  return i;
+}
+
+function createCorner(parent, tpl, pos, back, front) {
+  parent = defaults (parent, null);
+  tpl = defaults (tpl, 'ltcirc');
+  pos = defaults (pos,'left');
+  back = defaults (back, 'backdrop');
+  front = defaults (front, 'frame');
+  var p;
+  if (null == parent) {
+    p = document.body;
+  } else {
+    p = document.querySelector('#'+parent);
+    if (p == null)
+      return null;
+  }
+  var tmp = document.querySelector('#'+tpl);
+  if (tmp == null) {
+    return null;
+  }
+
+  var clone = document.importNode(tmp.content, true);
+  var svg = clone.querySelector('svg')
+  svg.classList.add(pos);
+  var rect = clone.querySelector('rect');
+  rect.classList.add(back);
+  var circ = clone.querySelector('circle');
+  circ.classList.add(front);
+  p.appendChild(clone);
+  return svg;
+}
+</script>
+<script>
+function mainPage() {
+ var PageContentArea = document.getElementById('dispArea');
+ PageContentArea.innerHTML = '<h1>My main Page</h1><br><br><p>This is the home for my amazing pet projects</p>';
+}
+function setMenuHeight() {
+  var h = window.innerHeight - (72+24);
+  var e = document.getElementById('menu');
+  e.style.height = h+'px';
+  var f = h - 25;
+  e = document.getElementById('foot')
+  e.style.top = f +'px';
+}
+</script>
+
+
+
+</head>
+<body class="backdrop" style="margin:0px; padding-top: 5px;" onresize="setMenuHeight();">
+<!-- the top line -->
+<div id="tbar" class="calign frame" style="height:25px;">
+ <script>createCorner('tbar');</script>
+ <script>createCorner('tbar','rtcirc','right');</script>
+ <span class="calign frame">&nbsp;</span>
+</div>
+<div class="calign frame" style="text-align:center;">
+Alchemiestick software repository
+</div>
+<div id="tend" class="calign frame" style="height:24px; text-align:center; ">
+ <script>createCorner('tend','rbcirc','right');</script>
+ under reconstruction
+</div>
+<div id="field" class="calign" style="height:25px;">
+<div id="menu" class="frame menu left" onRedraw="setMenuHeight();">
+<a href="#" onClick="mainPage();">main</a><br/>
+<a href="/?link=resume" target="_blank">my resume</a><br/>
+<a href="https://github.com/Katana-Steel/" target="_blank">my github page</a><br/>
+<a href="#" onClick="ajax_loadContent('dispArea','/?link=linsudoku');">Sudoku Solver</a><br/>
+</div>
+<script>
+var c = createCorner('field','ltcirc','left','frame','backdrop');
+c.style.left = '100px';
+</script>
+<div id="dispArea" class="backdrop" style="margin-left:115px; padding-top:10px"></div>
+</div>
+<div id="foot" class="calign" style="height: 24px; text-align: center; font-size: 8pt;">
+<script>
+  var c = createCorner('foot','lbcirc','left','frame','backdrop');
+  c.style.left = '100px';
+</script>
+<div class="frame menu left" style="height: 24px;">&nbsp;</div>
+copyright Katana Steel</div>
+<script>
+  mainPage();
+  setMenuHeight();
+</script>
+</body>
+</html>
+

@@ -1,0 +1,17 @@
+application: curious-scarab-295
+version: 11
+api_version: 1
+runtime: python27
+threadsafe: True
+
+handlers:
+- url: /styles
+  static_dir: styles
+- url: /js
+  static_dir: js
+- url: /test/.*
+  script: test.application
+- url: /store_user.php
+  script: wine_metric.application
+- url: /.*
+  script: main_site.app
