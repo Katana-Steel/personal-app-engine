@@ -124,8 +124,9 @@ function setMenuHeight() {
   var e = document.getElementById('menu');
   e.style.height = h+'px';
   var f = h - 25;
+  var d = document.getElementById('dispArea');
   e = document.getElementById('foot')
-  e.style.top = f +'px';
+  d.style.height = e.style.top = f +'px';
 }
 </script>
 
@@ -157,7 +158,7 @@ Alchemiestick software repository
 var c = createCorner('field','ltcirc','left','frame','backdrop');
 c.style.left = '100px';
 </script>
-<div id="dispArea" class="backdrop" style="margin-left:115px; padding-top:10px"></div>
+<div id="dispArea" class="backdrop" style="overflow-y: scroll; margin-left:115px; padding-top:10px"></div>
 </div>
 <div id="foot" class="calign" style="height: 24px; text-align: center; font-size: 8pt;">
 <script>
