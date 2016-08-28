@@ -26,7 +26,7 @@ class Menu(webapp2.RequestHandler):
     def get(self):
       resp = self.response
       resp.headers ['Content-Type'] = 'application/json'
-      resp.write (self.main)
+      resp.write (self.main_tpl)
       
 
 class Root(webapp2.RequestHandler):
