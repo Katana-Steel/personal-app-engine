@@ -158,6 +158,8 @@ class gameHandler ( webapp2.RequestHandler ):
         to_store.put()
     else:
         brd = brds.values()[0]
+    brd['flood'][0] = len(brd['flood'][0])
+    brd['treasure'][0]
     resp.write (json.dumps(brd))
 
 #application = webapp2.WSGIApplication ([

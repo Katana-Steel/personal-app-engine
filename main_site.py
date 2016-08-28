@@ -48,11 +48,12 @@ class Root(webapp2.RequestHandler):
         req = self.request
         if 'resume' in link:
             return ('application/xhtml+xml',self.getStaticData('/static/resume.xhtml'))
-        if 'sudoku-linux' in link:
-            return ('text/html',self.getStaticData('/static/linsudoku.html'))
-        if 'linsudoku' in link:
-            return ('text/html',self.getStaticData('/static/linsudoku.html'))
-            
+        if 'sudoku' in link:
+            if 'lin' in link:
+                return ('text/html',self.getStaticData('/static/linsudoku.html'))
+        if 'certs' in link:
+            return ('text/html',self.getStaticData('/static/certs.html'))
+
         return ('text/html',self.main_tpl)
 
     def get(self):
