@@ -1,5 +1,5 @@
 application: curious-scarab-295
-version: 11
+version: 12
 api_version: 1
 runtime: python27
 threadsafe: True
@@ -9,6 +9,8 @@ handlers:
   static_dir: styles
 - url: /js
   static_dir: js
+- url: /img
+  static_dir: images
 - url: /test/.*
   script: test.application
 - url: /store_user.php
