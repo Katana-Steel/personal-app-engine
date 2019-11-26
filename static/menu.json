@@ -1,0 +1,10 @@
+[
+ {"title":"About Me", "function":"mainPage", "args":[]},
+ {"title":"<a href=\"/?link=resume\" target=\"_blank\">My Resume</a>", "function":"","args":[]},
+ {"title":"My Certificates", "function": "ajax_loadContent"
+ , "args":["dispArea", "/?link=certs" ]},
+ {"title":"<a href=\"https://github.com/Katana-Steel\" target=\"_blank\">My github projects</a>", "function":"","args":[]},
+ {"title":"<a href=\"https://gitlab.com/Katana-Steel\" target=\"_blank\">My gitlab projects</a>", "function":"","args":[]},
+ {"title":"Sudoku Solver", "function": "ajax_loadContent"
+ , "args":["dispArea", "/?link=linsudoku" ]}
+]

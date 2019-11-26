@@ -39,12 +39,9 @@
     left:0px;
 }
 
-.link {
-  color: #0000bb;
-  text-decoration: underline;
+a {
   font-size: 10pt;
   margin-left: 3px;
-  padding-top: 5px;
 }
 
 div {
@@ -54,9 +51,7 @@ div {
 </style>
 <script src="/js/ajax.js" type="text/javascript"></script>
 <script src="/js/ajax-dynamic-content.js" type="text/javascript"></script>
-<template id="tLink">
-  <div class="link"></div>
-</template>
+
 <template id="ltcirc">
  <svg height="24" width="24">
   <rect height="25" width="25"/>
@@ -82,40 +77,11 @@ div {
  </svg>
 </template>
 <script>
-var menus = [
-{"title":'About Me', 'function':'mainPage', 'args':[]}, 
-{"title":'<a href="/?link=resume" target="_blank">My Resume</a>', 'function':'','args':[]},
-{"title":'My Certificates', 'function': 'ajax_loadContent'
-, 'args':['dispArea', '/?link=certs' ]},
-{"title":'Sudoku Solver', 'function': 'ajax_loadContent'
-, 'args':['dispArea', '/?link=linsudoku' ]}
-];
 function defaults(i, def)
 {
   if (i == undefined )
     return def;
   return i;
-}
-
-function makeMenu () {
-  var mz;
-  var dMenu = document.getElementById('menu');
-  var Linktpl = document.querySelector('#tLink');
-  dMenu.innerHTML = '';
-  for (var i=0;i < menus.length; ++i) {
-    mz = menus[i];
-    var clone = document.importNode(Linktpl.content, true);
-    var link = clone.querySelector('div');
-    link.innerHTML = mz.title;
-    var arg ='';
-    for (var j=0; j < mz.args.length; ++j) {
-      if (j > 0)
-        arg += ',';
-      arg += "'" + mz.args[j] + "'";
-    }
-    link.setAttribute ('onclick', mz.function +'('+arg+')'); 
-    dMenu.appendChild (clone);
-  }
 }
 
 function createCorner(parent, tpl, pos, back, front) {
@@ -156,9 +122,9 @@ function mainPage() {
 function setMenuHeight() {
   var h = window.innerHeight - (72+24);
   var e = document.getElementById('menu');
-  var d = document.getElementById('dispArea');
   e.style.height = h+'px';
   var f = h - 25;
+  var d = document.getElementById('dispArea');
   e = document.getElementById('foot')
   d.style.height = e.style.top = f +'px';
 }
@@ -179,16 +145,21 @@ Alchemiestick software repository
 </div>
 <div id="tend" class="calign frame" style="height:24px; text-align:center; ">
  <script>createCorner('tend','rbcirc','right');</script>
- under reconstruction
+
 </div>
 <div id="field" class="calign" style="height:25px;">
-<div id="menu" class="frame menu left">
+<div id="menu" class="frame menu left" onRedraw="setMenuHeight();">
+<a href="#" onClick="mainPage();">main</a><br/>
+<a href="/?link=resume" target="_blank">my resume</a><br/>
+<a href="#" onClick="ajax_loadContent('dispArea','/?link=certs');">my certificates</a><br/>
+<a href="https://github.com/Katana-Steel/" target="_blank">my github page</a><br/>
+<a href="#" onClick="ajax_loadContent('dispArea','/?link=linsudoku');">Sudoku Solver</a><br/>
 </div>
 <script>
 var c = createCorner('field','ltcirc','left','frame','backdrop');
 c.style.left = '100px';
 </script>
-<div id="dispArea" class="backdrop" style="overflow-y:scroll;margin-left:115px; padding-top:10px"></div>
+<div id="dispArea" class="backdrop" style="overflow-y: scroll; margin-left:115px; padding-top:10px"></div>
 </div>
 <div id="foot" class="calign" style="height: 24px; text-align: center; font-size: 8pt;">
 <script>
@@ -200,9 +171,7 @@ copyright Katana Steel</div>
 <script>
   mainPage();
   setMenuHeight();
-  makeMenu();
 </script>
-
 </body>
 </html>
 

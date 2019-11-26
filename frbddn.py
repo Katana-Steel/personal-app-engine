@@ -1,5 +1,5 @@
 
-from google.appengine.ext import ndb
+from google.cloud import ndb
 from google.appengine.api import memcache
 from google.appengine.api import users
 
@@ -86,7 +86,7 @@ board = {
  'flood': [[],[]],
  'treasure': [[],[]],
  'tiles': [
-   {'name': 'Helicopter Landing','state':0, 'base':'heliport'}, 
+   {'name': 'Helicopter Landing','state':0, 'base':'heliport'},
    {'name': 'Tresure W zone 2','state':1, 'base':'wind2' },
    {'name': 'Sunken','state':2, 'base':'water' } ],
  'players': [
@@ -124,7 +124,7 @@ def generateBoard(type):
  'flood':[fl[6:],fl[0:5]],
  'treasure': [tr,[]],
   }
-  
+
   for x in board['flood'][1]:
     for s in t:
       if x['base'] == s['base']:
@@ -161,6 +161,8 @@ class gameHandler ( webapp2.RequestHandler ):
     brd['flood'][0] = len(brd['flood'][0])
     brd['treasure'][0]
     resp.write (json.dumps(brd))
+
+
 
 #application = webapp2.WSGIApplication ([
 #    ('/', mainHandler),
