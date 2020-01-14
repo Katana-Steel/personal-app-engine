@@ -45,7 +45,7 @@ def promo_setup():
         else:
             return make_response('', 403)
     else:
-        (title, msg) = (request.args['title'], request.args['msg']
+        (title, msg) = (request.form['title'], request.form['msg'])
         linkId = promo.store_message(title, msg)
         a = '<a href="/?promo={0}">promo id: {0}</a>'.format(linkId)
         return a
