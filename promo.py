@@ -1,13 +1,13 @@
-from google.google.cloud import ndb
+from google.cloud import ndb
 from hashlib import sha224
 
 client = ndb.Client()
 
 
 class Message(ndb.Model):
-    promoID = ndb.StringProperty(indexed=True)
-    title = ndb.StringProperty(indexed=False)
-    msg = ndb.StringProperty(indexed=False)
+    promoID = ndb.StringProperty()
+    title = ndb.StringProperty()
+    msg = ndb.StringProperty()
     created = ndb.DateTimeProperty(auto_now=True, indexed=True)
 
 
