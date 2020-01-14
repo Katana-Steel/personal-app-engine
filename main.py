@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # import frbddn
 import wine_metric
+import promo
 
 
 def getAccinfo(d):
@@ -15,6 +16,13 @@ def getAccinfo(d):
     if 'lic' in d:
         a = d['lic']
     return (a, d['googleAcc'])
+
+
+def getStaticData(fname):
+    res = open(appdir + fname, 'r')
+    resbody = res.read()
+    res.close()
+    return resbody
 
 
 @app.route('/store_user.php', methods=['GET', 'POST'])
@@ -28,11 +36,19 @@ def store_user():
     wine_metric.store_user(id, lic)
     return ''
 
-def getStaticData(fname):
-    res = open(appdir + fname, 'r')
-    resbody = res.read()
-    res.close()
-    return resbody
+
+@app.route('/promo_create', methods=['GET', 'POST'])
+def promo_setup():
+    if request.method == 'GET':
+        if promo.client is not None:
+            return getStaticData('/static/create_promo.html')
+        else:
+            return make_response('', 403)
+    else:
+        (title, msg) = (request.args['title'], request.args['msg']
+        linkId = promo.store_message(title, msg)
+        a = '<a href="/?promo={0}">promo id: {0}</a>'.format(linkId)
+        return a
 
 
 @app.route('/robot.txt', methods=['GET'])
@@ -76,4 +92,3 @@ def Root():
     if 'link' in request.args:
         return links(request.args['link'])
     return getStaticData('/static/main.html')
-
