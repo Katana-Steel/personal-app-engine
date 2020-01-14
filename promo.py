@@ -28,6 +28,7 @@ def store_message(title, msg):
         m.msg = msg
         m.promoID = generate_id(title)
         m.put()
+        return m.promoID
 
 
 def get_message_by_id(idx):
