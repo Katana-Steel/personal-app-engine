@@ -87,8 +87,16 @@ def TestPage():
     return getStaticData('/static/test.html')
 
 
+@app.route('/main')
+def the_about_page():
+    return getStaticData('/static/profile.html')
+
+
 @app.route('/')
 def Root():
+    resp = make_response(getStaticData('/static/main.html'), 200)
     if 'link' in request.args:
         return links(request.args['link'])
-    return getStaticData('/static/main.html')
+    if 'promo' in request.args:
+        promo_cookie(request.cookies, resp, request.args['promo'])
+    return resp

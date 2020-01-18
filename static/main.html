@@ -166,8 +166,7 @@ function createCorner(parent, tpl, pos, back, front) {
 </script>
 <script>
 function mainPage() {
- var PageContentArea = document.getElementById('dispArea');
- PageContentArea.innerHTML = '<h1>My main Page</h1><br><br><p>This is the home for my amazing pet projects</p>';
+  ajax_loadContent('dispArea', '/main');
 }
 function setMenuHeight() {
   var h = window.innerHeight - (72+24);
