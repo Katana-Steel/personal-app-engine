@@ -8,7 +8,7 @@ function sack(file) {
 	this.xmlhttp = null;
 
 	this.resetData = function() {
-		this.method = "POST";
+		this.method = "GET";
   		this.queryStringSeparator = "?";
 		this.argumentSeparator = "&";
 		this.URLString = "";
