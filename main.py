@@ -43,7 +43,7 @@ def store_user():
 @app.route('/promo_create', methods=['GET', 'POST'])
 def promo_setup():
     if request.method == 'GET':
-        if promo.client is not None:
+        if 'curious-scarab' in request.host:
             return getStaticData('/static/create_promo.html')
         else:
             return make_response('', 403)
@@ -51,10 +51,11 @@ def promo_setup():
         (title, msg) = (request.form['title'], request.form['msg'])
         linkId = promo.store_message(title, msg)
         a = '<a href="/?promo={0}">promo id: {0}</a>'.format(linkId)
+        a += getStaticData('/static/create_promo.html')
         return a
 
 
-@app.route('/robot.txt', methods=['GET'])
+@app.route('/robots.txt', methods=['GET'])
 def Robot():
     resp = make_response("""User-agent: Googlebot
 Allow: /
