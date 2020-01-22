@@ -1,12 +1,15 @@
-import json, os
+import json
+import os
 from flask import Flask
 from flask import request, make_response
-
-app = Flask(__name__)
-
+from datetime import datetime, timedelta
 # import frbddn
 import wine_metric
 import promo
+
+app = Flask(__name__)
+appdir = os.path.dirname(__file__)
+days = timedelta(days=1)
 
 
 def getAccinfo(d):
@@ -80,6 +83,31 @@ def links(link):
             return getStaticData('/static/linsudoku.html')
     if 'certs' in link:
         return getStaticData('/static/certs.html')
+    if link.startswith('pr'):
+        return look_up_promo(link[2:])
+
+
+def look_up_promo(idx):
+    i = promo.get_message_by_id(idx)
+    if i is not None:
+        return '<h2>{0}</h2><div class="promo">{1}</div>'.format(*i)
+    return make_response('code {0} not found'.format(idx), 404)
+
+
+def promo_cookie(cookies, resp, idx):
+    p = [idx]
+    if 'promo' in request.cookies:
+        p = json.loads(request.cookies.get('promo'))
+        if idx not in p:
+            p.append(idx)
+    autoload = '<script>\n  ajax_loadContent("dispArea", "/?link=pr{0}");\n</script>'.format(idx)
+    dr = resp.get_data().decode().split('\n')
+    i = dr.index('</body>')
+    dr[i:i] = autoload.split('\n')
+    resp.set_data('\n'.join(dr))
+    # create a secure cookie lasting 30 days
+    exp = datetime.now() + (30 * days)
+    resp.set_cookie('promo', json.dumps(p), expires=exp, secure=True)
 
 
 @app.route('/test/')
