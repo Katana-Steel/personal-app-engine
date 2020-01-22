@@ -7,8 +7,8 @@ client = ndb.Client()
 class Message(ndb.Model):
     promoID = ndb.StringProperty()
     title = ndb.StringProperty()
-    msg = ndb.StringProperty()
-    created = ndb.DateTimeProperty(auto_now=True, indexed=True)
+    msg = ndb.TextProperty()
+    created = ndb.DateTimeProperty(auto_now_add=True, indexed=True)
 
 
 def generate_id(title):
@@ -34,7 +34,7 @@ def store_message(title, msg):
 def get_message_by_id(idx):
     with client.context():
         try:
-            m = Message.query(Message.promoID == idx)
+            m = Message.query(Message.promoID == idx).fetch(1)
             return (m[0].title, m[0].msg)
         except Exception:
             return None
