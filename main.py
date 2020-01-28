@@ -8,7 +8,6 @@ import wine_metric
 import promo
 
 app = Flask(__name__)
-appdir = os.path.dirname(__file__)
 days = timedelta(days=1)
 
 
@@ -22,6 +21,7 @@ def getAccinfo(d):
 
 
 def getStaticData(fname):
+    appdir = os.path.dirname(__file__)
     res = open(appdir + fname, 'r')
     resbody = res.read()
     res.close()
