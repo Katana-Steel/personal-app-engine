@@ -67,19 +67,19 @@ Disallow: /
     return resp
 
 
-@app.route('/menu.json')
+@app.route('/menu.json', methods=['GET', 'POST'])
 def Menu():
     j = json.loads(getStaticData('/static/menu.json'))
-    pr = []
-    if 'promo' in request.cookies:
-        pr = json.loads(request.cookies.get('promo'))
+    pr = get_promo_cookie(request.cookies)
     for i in pr:
         try:
             (title, ssss) = promo.get_message_by_id(i)
             j[1:1] = [{'title': title, 'function': 'ajax_loadContent', 'args': ['dispArea', '/?link=pr{0}'.format(i)]}]
-        except TypeError:
+        except Exception:
             continue
-    return j
+    resp = make_response(json.dumps(j))
+    resp.headers['Content-Type'] = 'application/json'
+    return resp
 
 
 def links(link):
@@ -94,6 +94,16 @@ def links(link):
         return look_up_promo(link[2:])
 
 
+def get_promo_cookie(cookies):
+    t = []
+    try:
+        if 'promo' in cookies:
+            t = json.loads(cookies.get('promo'))
+    except Exception:
+        pass
+    return t
+
+
 def look_up_promo(idx):
     i = promo.get_message_by_id(idx)
     if i is not None:
@@ -102,11 +112,9 @@ def look_up_promo(idx):
 
 
 def promo_cookie(cookies, resp, idx):
-    p = [idx]
-    if 'promo' in request.cookies:
-        p = json.loads(request.cookies.get('promo'))
-        if idx not in p:
-            p.append(idx)
+    p = get_promo_cookie(cookies)
+    if idx not in p:
+        p.append(idx)
     autoload = '<script>\n  ajax_loadContent("dispArea", "/?link=pr{0}");\n</script>'.format(idx)
     dr = resp.get_data().decode().split('\n')
     i = dr.index('</body>')
