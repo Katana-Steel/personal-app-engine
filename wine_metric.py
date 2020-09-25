@@ -11,17 +11,16 @@ class MyUsers(ndb.Model):
 
 
 def store_user(id, lic):
-        with client.context():
-          try:
+    with client.context():
+        try:
             user = MyUsers.query(MyUsers.userID == id).fetch(1)
             user[0].license = int(lic)
             user[0].count += 1
             user[0].put()
-          except:
+        except Exception:
             newUser = MyUsers()
             newUser.userID = id
             newUser.license = int(lic)
             newUser.count = 1
             newUser.put()
-        return ''
-
+    return ''

@@ -169,8 +169,18 @@ function createCorner(parent, tpl, pos, back, front) {
 function mainPage() {
   ajax_loadContent('dispArea', '/main');
 }
+
+function getBorderHeight() {
+  var topHeight = parseInt(document.body.style.paddingTop, 10);
+  for (var n of ['tbar', 'title', 'tend', 'foot']) {
+      var d = document.getElementById(n);
+      topHeight += d.clientHeight;
+  }
+  return topHeight;
+}
+
 function setMenuHeight() {
-  var h = window.innerHeight - (72+24);
+  var h = window.innerHeight - getBorderHeight();
   var e = document.getElementById('menu');
   var d = document.getElementById('dispArea');
   e.style.height = h+'px';
@@ -179,9 +189,6 @@ function setMenuHeight() {
   d.style.height = e.style.top = f +'px';
 }
 </script>
-
-
-
 </head>
 <body class="backdrop" style="margin:0px; padding-top: 5px;" onresize="setMenuHeight();">
 <!-- the top line -->
@@ -190,8 +197,8 @@ function setMenuHeight() {
  <script>createCorner('tbar','rtcirc','right');</script>
  <span class="calign frame">&nbsp;</span>
 </div>
-<div class="calign frame" style="text-align:center;">
-Alchemiestick software repository
+<div id="title" class="calign frame" style="text-align:center;">
+Alchemiestick I/S<br/><small>Rene "Katana Steel" Kjellerup</small>
 </div>
 <div id="tend" class="calign frame" style="height:24px; text-align:center; ">
  <script>createCorner('tend','rbcirc','right');</script>
@@ -203,7 +210,12 @@ Alchemiestick software repository
 var c = createCorner('field','ltcirc','left','frame','backdrop');
 c.style.left = '100px';
 </script>
-<div id="dispArea" class="backdrop" style="overflow-y: scroll; margin-left:115px; padding-top:10px"></div>
+<div id="dispArea" class="backdrop" style="overflow-y: scroll; margin-left:115px; padding-top:10px">
+  This page use javascript all of which is open source.<br/>
+  * SACK - MIT license <a href="https://github.com/abritinthebay/simpleajaxcodekit">original source on github</a><br/>
+  * ajax dynamic content -  Lesser GPL version 2.1 or later <a href="http://www.dhtmlgoodies.com/index.html?whichScript=ajax-dynamic-content">dhtmlgoodies.com</a><br/>
+  * the rest is GPL v3 or later and written by me.
+</div>
 </div>
 <div id="foot" class="calign" style="height: 24px; text-align: center; font-size: 8pt;">
 <script>

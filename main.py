@@ -36,23 +36,27 @@ def store_user():
         (lic, id) = getAccinfo(request.form)
     else:
         (lic, id) = getAccinfo(request.args)
+    if id is None:
+        return ''
     wine_metric.store_user(id, lic)
     return ''
 
 
 @app.route('/promo_create', methods=['GET', 'POST'])
 def promo_setup():
-    if request.method == 'GET':
-        if 'curious-scarab' in request.host:
+    if 'curious-scarab' in request.host:
+        if request.method == 'GET':
             return getStaticData('/static/create_promo.html')
+        elif request.method == 'POST':
+            (title, msg) = (request.form['title'], request.form['msg'])
+            linkId = promo.store_message(title, msg)
+            a = '<a href="/?promo={0}">promo id: {0}</a>'.format(linkId)
+            a += getStaticData('/static/create_promo.html')
+            return a
         else:
-            return make_response('', 403)
+            return make_response('unknown method', 405)
     else:
-        (title, msg) = (request.form['title'], request.form['msg'])
-        linkId = promo.store_message(title, msg)
-        a = '<a href="/?promo={0}">promo id: {0}</a>'.format(linkId)
-        a += getStaticData('/static/create_promo.html')
-        return a
+        return make_response('', 403)
 
 
 @app.route('/robots.txt', methods=['GET'])
@@ -90,8 +94,11 @@ def links(link):
             return getStaticData('/static/linsudoku.html')
     if 'certs' in link:
         return getStaticData('/static/certs.html')
+    if 'promo' in link:
+        return promo_setup()
     if link.startswith('pr'):
         return look_up_promo(link[2:])
+    return make_response('', 404)
 
 
 def get_promo_cookie(cookies):
@@ -111,17 +118,28 @@ def look_up_promo(idx):
     return make_response('code {0} not found'.format(idx), 404)
 
 
+def promo_form(resp):
+    autoload = '  ajax_loadContent("dispArea", "/?link=promo");'
+    dr = resp.get_data().decode().split('\n')
+    i = dr.index('  mainPage();')
+    dr[i] = autoload
+    resp.set_data('\n'.join(dr))
+    return resp
+
+
 def promo_cookie(cookies, resp, idx):
+    if 'setup' in idx:
+        return promo_form(resp)
     p = get_promo_cookie(cookies)
     if idx not in p:
         p.append(idx)
-    autoload = '<script>\n  ajax_loadContent("dispArea", "/?link=pr{0}");\n</script>'.format(idx)
-    dr = resp.get_data().decode().split('\n')
-    i = dr.index('</body>')
-    dr[i:i] = autoload.split('\n')
-    resp.set_data('\n'.join(dr))
+    autoload = '  ajax_loadContent("dispArea", "/?link=pr{0}");'.format(idx)
     # create a secure cookie lasting 30 days
     exp = datetime.now() + (30 * days)
+    dr = resp.get_data().decode().split('\n')
+    i = dr.index('  mainPage();')
+    dr[i] = autoload
+    resp.set_data('\n'.join(dr))
     resp.set_cookie('promo', json.dumps(p), expires=exp, secure=True)
 
 
