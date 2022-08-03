@@ -53,8 +53,7 @@ div {
   padding: 0px;
 }
 </style>
-<script src="/js/ajax.js" type="text/javascript"></script>
-<script src="/js/ajax-dynamic-content.js" type="text/javascript"></script>
+<script src="/js/async.js" type="text/javascript"></script>
 <template id="tLink">
   <div class="link"></div>
 </template>
@@ -92,9 +91,6 @@ var menus = [
 , 'args':['dispArea', '/?link=linsudoku' ]}
 ];
 
-var menu_async = new sack();
-menu_async.method = 'GET';
-
 function defaults(i, def)
 {
   if (i == undefined )
@@ -125,14 +121,19 @@ function makeMenu () {
 
 function getMenu() {
     makeMenu();
-    var async = menu_async;
-    async.resetFunctions();
-    async.requestFile = '/menu.json';
-    async.onCompletion = function() {
-        menus = JSON.parse(this.response);
+    fetch('/menu.json')
+      .then((resp) => {
+        const contentType = resp.headers.get('content-type');
+        if (resp.ok && contentType.includes('application/json')){
+          return resp.json();
+        }
+        throw new TypeError('json object not returned');
+      })
+      .then((data)=> {
+        menus = data;
         makeMenu();
-    }
-    async.runAJAX();
+      })
+      .catch((err) => console.error(err));
 }
 
 function createCorner(parent, tpl, pos, back, front) {
@@ -211,10 +212,8 @@ var c = createCorner('field','ltcirc','left','frame','backdrop');
 c.style.left = '100px';
 </script>
 <div id="dispArea" class="backdrop" style="overflow-y: scroll; margin-left:115px; padding-top:10px">
-  This page use javascript all of which is open source.<br/>
-  * SACK - MIT license <a href="https://github.com/abritinthebay/simpleajaxcodekit">original source on github</a><br/>
-  * ajax dynamic content -  Lesser GPL version 2.1 or later <a href="http://www.dhtmlgoodies.com/index.html?whichScript=ajax-dynamic-content">dhtmlgoodies.com</a><br/>
-  * the rest is GPL v3 or later and written by me.
+  This page use javascript all of which is open source, <br/>
+  under the GPL v3 or later and written by me.
 </div>
 </div>
 <div id="foot" class="calign" style="height: 24px; text-align: center; font-size: 8pt;">
